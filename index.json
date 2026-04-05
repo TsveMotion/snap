@@ -1,0 +1,11 @@
+{
+  "scripts": [
+    {
+      "name": "openai_inbox_copilot",
+      "author": "OpenAI",
+      "description": "Drafts or auto-sends OpenAI replies for existing direct contacts in PurrfectSnap.",
+      "version": "1.0",
+      "filepath": "scripts/openai_inbox_copilot.js"
+    }
+  ]
+}
