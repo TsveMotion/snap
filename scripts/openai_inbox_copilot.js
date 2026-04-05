@@ -380,10 +380,33 @@ module.onSnapApplicationLoad = function() {
         var draft = pendingDrafts[conversationId]
 
         builder.text("OpenAI Inbox Copilot")
+        builder.text("Enabled: " + isEnabled())
+        builder.text("Mode: " + currentMode())
+        builder.switch(isEnabled(), function(value) {
+            setCfg(CONFIG_KEYS.enabled, value)
+        })
+        builder.list("Reply mode", ["draft", "auto"], function(value) {
+            setCfg(CONFIG_KEYS.mode, value)
+        })
+        builder.switch(onlyChatMessages(), function(value) {
+            setCfg(CONFIG_KEYS.onlyChats, value)
+        })
+        builder.textInput("OpenAI API key", openAIKey(), function(value) {
+            setCfg(CONFIG_KEYS.apiKey, value)
+        })
+        builder.textInput("OpenAI model", modelName(), function(value) {
+            setCfg(CONFIG_KEYS.model, value)
+        })
+        builder.textInput("Cooldown seconds", String(cfgInt(CONFIG_KEYS.cooldown, 90)), function(value) {
+            setCfg(CONFIG_KEYS.cooldown, value)
+        })
+        builder.textInput("System prompt", systemPrompt(), function(value) {
+            setCfg(CONFIG_KEYS.systemPrompt, value)
+        })
+        builder.text("Use draft mode first. Auto mode sends immediately for existing 1:1 contacts.")
 
         if (draft == null) {
             builder.text("No pending draft for this conversation.")
-            builder.text("Mode: " + currentMode())
             return
         }
 
@@ -414,34 +437,5 @@ module.onSnapApplicationLoad = function() {
         } catch (e) {
             logError("OpenAI Inbox Copilot failed: " + e)
         }
-    })
-}
-
-module.onSnapEnhanceLoad = function() {
-    im.create("settings", function(builder) {
-        builder.text("OpenAI Inbox Copilot")
-        builder.switch(isEnabled(), function(value) {
-            setCfg(CONFIG_KEYS.enabled, value)
-        })
-        builder.list("Reply mode", ["draft", "auto"], function(value) {
-            setCfg(CONFIG_KEYS.mode, value)
-        })
-        builder.switch(onlyChatMessages(), function(value) {
-            setCfg(CONFIG_KEYS.onlyChats, value)
-        })
-        builder.textInput("OpenAI API key", openAIKey(), function(value) {
-            setCfg(CONFIG_KEYS.apiKey, value)
-        })
-        builder.textInput("OpenAI model", modelName(), function(value) {
-            setCfg(CONFIG_KEYS.model, value)
-        })
-        builder.textInput("Cooldown seconds", String(cfgInt(CONFIG_KEYS.cooldown, 90)), function(value) {
-            setCfg(CONFIG_KEYS.cooldown, value)
-        })
-        builder.textInput("System prompt", systemPrompt(), function(value) {
-            setCfg(CONFIG_KEYS.systemPrompt, value)
-        })
-        builder.text("Draft mode creates a reply in Conversation Toolbox.")
-        builder.text("Auto mode immediately sends replies for existing direct contacts.")
     })
 }
